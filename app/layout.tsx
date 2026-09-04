@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Neco - Kemudahan dalam satu platform",
-    template: "%s | Neco", // Sub-page dapat menggunakan template ini
+    default: "Floa - Kemudahan dalam satu platform",
+    template: "%s | Floa", // Sub-page dapat menggunakan template ini
   },
   description: "Platform belanja modern, responsif, dan terpercaya",
   icons: {

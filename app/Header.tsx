@@ -24,11 +24,7 @@ import EmployeeModal from '@/components/EmployeeModal'
 import StoreModal from '@/components/StoreModal'
 import OrdersModal from '@/components/OrdersModal'
 
-export default function IndexLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function Navbar() {
   const router = useRouter()
   
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
@@ -51,7 +47,6 @@ export default function IndexLayout({
   const [isSearching, setIsSearching] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
   
-  // State baru untuk melacak indeks sugesti yang sedang dipilih menggunakan keyboard
   const [focusedIndex, setFocusedIndex] = useState<number>(-1)
   
   const profileRef = useRef<HTMLDivElement>(null)
@@ -125,7 +120,7 @@ export default function IndexLayout({
     if (!trimmedQuery) {
       setSuggestions([])
       setIsSearching(false)
-      setFocusedIndex(-1) // Reset index saat query kosong
+      setFocusedIndex(-1)
       return
     }
 
@@ -154,7 +149,7 @@ export default function IndexLayout({
             setSuggestions(data.map(item => ({ id: item.id, display: item.product_name })))
           }
         }
-        setFocusedIndex(-1) // Reset index setiap kali data penjelajahan baru masuk
+        setFocusedIndex(-1)
       } catch (err) {
         console.error('Gagal memuat saran pencarian:', err)
       } finally {
@@ -204,7 +199,6 @@ export default function IndexLayout({
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    // Jika user menekan enter dan ada item sugesti yang sedang difokuskan lewat keyboard
     if (showSuggestions && focusedIndex >= 0 && focusedIndex < suggestions.length) {
       handleSuggestionClick(suggestions[focusedIndex].display)
     } else if (searchQuery.trim()) {
@@ -220,7 +214,6 @@ export default function IndexLayout({
     router.push(`/search?q=${encodeURIComponent(value)}&type=${searchType}`)
   }
 
-  // Fungsi baru untuk menangani navigasi tombol panah naik/turun pada input
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!showSuggestions || suggestions.length === 0) return
 
@@ -241,7 +234,7 @@ export default function IndexLayout({
   }
 
   return (
-    <div className="flex flex-col min-h-screen w-full relative bg-[#ffffff]">
+    <>
       <header className="w-full bg-[#ffffff] border-b border-gray-100 sticky top-0 z-40 px-4 md:px-8 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
@@ -251,7 +244,7 @@ export default function IndexLayout({
               <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center bg-gray-50 flex-shrink-0 border border-gray-100">
                 <img src="/favicon.ico" alt="Logo" className="w-full h-full object-cover" />
               </div>
-              <span className="hidden md:inline">Fl<span className="text-red-600">oa</span></span>
+              <span className="hidden md:inline">Ne<span className="text-red-600">co</span></span>
             </Link>
           </div>
 
@@ -268,7 +261,7 @@ export default function IndexLayout({
                 value={searchQuery}
                 onFocus={() => setShowSuggestions(true)}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleKeyDown} // Pemicu event keyboard ditambahkan di sini
+                onKeyDown={handleKeyDown}
                 className="w-full pl-10 pr-28 py-2 bg-gray-50 border border-gray-200 text-sm rounded-xl focus:outline-none focus:border-red-500 focus:bg-white transition-colors text-gray-900 placeholder-gray-400"
               />
               
@@ -332,7 +325,7 @@ export default function IndexLayout({
                         key={item.id}
                         type="button"
                         onClick={() => handleSuggestionClick(item.display)}
-                        onMouseEnter={() => setFocusedIndex(index)} // Agar saat mouse digeser, indeks fokusnya ikut sinkron
+                        onMouseEnter={() => setFocusedIndex(index)}
                         className={`w-full flex items-center gap-3 px-3.5 py-2 text-left text-sm transition-colors ${
                           index === focusedIndex ? 'bg-red-50 text-red-600 font-semibold' : 'text-gray-700 hover:bg-gray-50'
                         }`}
@@ -518,14 +511,11 @@ export default function IndexLayout({
         </div>
       </header>
 
-      <main className="flex-1 w-full relative">
-        <div className="max-w-7xl mx-auto px-6 md:px-8 py-4">{children}</div>
-      </main>
-
+      {/* MODALS */}
       <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} user={user} />
       <OrdersModal isOpen={isOrdersOpen} onClose={() => setIsOrdersOpen(false)} user={user} />
       <EmployeeModal isOpen={isEmployeeOpen} onClose={() => setIsEmployeeOpen(false)} user={user} />
       <StoreModal isOpen={isStoreOpen} onClose={() => setIsStoreOpen(false)} userMarkets={userMarkets} />
-    </div>
+    </>
   )
 }
